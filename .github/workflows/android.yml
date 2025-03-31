@@ -25,16 +25,11 @@ jobs:
       run: ./gradlew assembleDebug
     - name: Run Unit Tests
       run: ./gradlew testDebugUnitTest
-    - name: Generate Code Coverage Report
-      run: ./gradlew jacocoTestReport
-    - name: Upload Code Coverage Report
-      uses: actions/upload-artifact@v4
-      with:
-        name: code-coverage-report
-        path: app/build/reports/jacoco/jacocoTestReport/html/
+    - name: Generate Kover XML Report
+      run: ./gradlew koverXmlReport
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v4
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
-        files: app/build/reports/jacoco/jacocoTestReport/jacocoTestReport.xml
+        files: app/build/reports/kover/report.xml
         fail_ci_if_error: true
