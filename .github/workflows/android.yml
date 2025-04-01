@@ -27,11 +27,14 @@ jobs:
       run: ./gradlew testDebugUnitTest
     - name: Build AndroidTest APK
       run: ./gradlew assembleDebugAndroidTest
+    - name: Authenticate to Google Cloud
+      uses: google-github-actions/auth@v1
+      with:
+        credentials_json: ${{ secrets.GCP_CREDENTIALS }}
     - name: Install gcloud CLI
       uses: google-github-actions/setup-gcloud@v1
       with:
         version: 'latest'
-        service_account_key: ${{ secrets.GCP_CREDENTIALS }}
         project_id: ${{ secrets.GCP_PROJECT_ID }}
     - name: Run Firebase Test Lab tests
       run: |
