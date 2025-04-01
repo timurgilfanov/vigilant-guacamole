@@ -36,7 +36,7 @@ jobs:
     - name: Run Firebase Test Lab tests
       run: gcloud firebase test android run \
           --type instrumentation \
-          --app app/build/outputs/apk/debug/app-debug.apk \ 
+          --app app/build/outputs/apk/debug/app-debug.apk \
           --test app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk \
           --device model=redfin,version=30 \
           --timeout 5m
