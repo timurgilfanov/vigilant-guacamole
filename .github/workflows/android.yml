@@ -25,6 +25,19 @@ jobs:
       run: ./gradlew assembleDebug
     - name: Run Unit Tests
       run: ./gradlew testDebugUnitTest
+    - name: Build AndroidTest APK
+      run: ./gradlew assembleDebugAndroidTest
+    - name: Run Instrumented Tests on Firebase Test Lab
+      uses: wzieba/Firebase-Test-Lab-Action@v1
+      with:
+        serviceCredentialsFile: ${{ secrets.GCP_CREDENTIALS }}
+        projectId: ${{ secrets.GCP_PROJECT_ID }}
+        app: app/build/outputs/apk/debug/app-debug.apk
+        test: app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk
+        deviceModel: Nexus6
+        osVersion: 27
+        locale: en
+        orientation: portrait
     - name: Generate Kover XML Report
       run: ./gradlew koverXmlReport
     - name: Upload coverage to Codecov
