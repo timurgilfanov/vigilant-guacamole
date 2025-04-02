@@ -39,8 +39,16 @@ jobs:
       uses: google-github-actions/setup-gcloud@v2
       with:
         project_id: ${{ secrets.GCP_PROJECT_ID }}
-    - name: Debug gcloud identity
-      run: gcloud auth list && gcloud config list
+    - name: Confirm service account info
+      run: |
+        gcloud auth list
+        gcloud config list
+        gcloud projects describe ${{ secrets.GCP_PROJECT_ID }}
+    - name: Confirm service account info
+      run: |
+        gcloud projects get-iam-policy ${{ secrets.GCP_PROJECT_ID }} \
+        --flatten="bindings[].members" \
+        --filter="bindings.members:github-actions@${{ secrets.GCP_PROJECT_ID }}.iam.gserviceaccount.com"
     - name: Run Firebase Test Lab tests
       run: |
         gcloud firebase test android run \
