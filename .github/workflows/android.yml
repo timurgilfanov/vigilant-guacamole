@@ -39,8 +39,8 @@ jobs:
       uses: google-github-actions/setup-gcloud@v2
       with:
         project_id: ${{ secrets.GCP_PROJECT_ID }}
-    - name: 'Use gcloud CLI'
-      run: 'gcloud info'
+    - name: Debug gcloud identity
+      run: gcloud auth list && gcloud config list
     - name: Run Firebase Test Lab tests
       run: |
         gcloud firebase test android run \
