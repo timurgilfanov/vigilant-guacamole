@@ -23,10 +23,14 @@ jobs:
       run: chmod +x gradlew
     - name: Build Debug APK
       run: ./gradlew assembleDebug
+    - name: ls app
+      run: ls app/build/outputs/apk/debug
     - name: Run Unit Tests
       run: ./gradlew testDebugUnitTest
     - name: Build AndroidTest APK
       run: ./gradlew assembleDebugAndroidTest
+    - name: ls app test
+      run: ls app/build/outputs/apk/androidTest/debug
     - name: Authenticate to Google Cloud
       uses: google-github-actions/auth@v2
       with:
@@ -34,7 +38,6 @@ jobs:
     - name: Install gcloud CLI
       uses: google-github-actions/setup-gcloud@v2
       with:
-        version: 'latest'
         project_id: ${{ secrets.GCP_PROJECT_ID }}
     - name: 'Use gcloud CLI'
       run: 'gcloud info'
