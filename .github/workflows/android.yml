@@ -21,44 +21,35 @@ jobs:
 
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
+
     - name: Build Debug APK
       run: ./gradlew assembleDebug
-    - name: ls app
-      run: ls app/build/outputs/apk/debug
+
     - name: Run Unit Tests
       run: ./gradlew testDebugUnitTest
+
     - name: Build AndroidTest APK
       run: ./gradlew assembleDebugAndroidTest
-    - name: ls app test
-      run: ls app/build/outputs/apk/androidTest/debug
-    - name: Authenticate to Google Cloud
-      uses: google-github-actions/auth@v2
+
+    - name: Install Firebase CLI
+      run: npm install -g firebase-tools
+
+    - name: Authenticate with Firebase
+      uses: FirebaseExtended/github-action-service-account@v5
       with:
-        credentials_json: ${{ secrets.GCP_CREDENTIALS }}
-    - name: Install gcloud CLI
-      uses: google-github-actions/setup-gcloud@v2
-      with:
-        project_id: ${{ secrets.GCP_PROJECT_ID }}
-    - name: Confirm service account info
-      run: |
-        gcloud auth list
-        gcloud config list
-        gcloud projects describe ${{ secrets.GCP_PROJECT_ID }}
-    - name: Confirm service account info
-      run: |
-        gcloud projects get-iam-policy ${{ secrets.GCP_PROJECT_ID }} \
-        --flatten="bindings[].members" \
-        --filter="bindings.members:github-actions@${{ secrets.GCP_PROJECT_ID }}.iam.gserviceaccount.com"
-    - name: Run Firebase Test Lab tests
-      run: |
-        gcloud firebase test android run \
-          --type instrumentation \
-          --app app/build/outputs/apk/debug/app-debug.apk \
-          --test app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk \
-          --device model=redfin,version=30 \
-          --timeout 5m
+        keyFileContent: ${{ secrets.GCP_CREDENTIALS }}
+        projectId: ${{ secrets.GCP_PROJECT_ID }}
+
+    - name: Run Android Instrumentation Tests
+      run: | 
+        firebase test android run \
+        --app app/build/outputs/apk/debug/app-debug.apk \
+        --test app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk \
+        --device model=oriole,version=33,locale=en,orientation=portrait
+
     - name: Generate Kover XML Report
       run: ./gradlew koverXmlReport
+
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v4
       with:
