@@ -41,17 +41,6 @@ jobs:
       with:
         project_id: ${{ secrets.GCP_PROJECT_ID }}
 
-    - name: Confirm service account info
-      run: |
-        gcloud auth list
-        gcloud config list
-        gcloud projects describe ${{ secrets.GCP_PROJECT_ID }}
-
-    - name: List APK Files
-      run: |
-        ls -l app/build/outputs/apk/debug/
-        ls -l app/build/outputs/apk/androidTest/debug/
-
     - name: Run Firebase Test Lab tests
       run: |
         gcloud firebase test android run \
