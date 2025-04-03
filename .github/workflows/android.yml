@@ -50,6 +50,24 @@ jobs:
           --device model=redfin,version=30 \
           --timeout 5m
 
+    - name: Run Android Lint
+      run: ./gradlew lintDebug
+
+    - name: Upload Lint Report
+      uses: actions/upload-artifact@v4
+      with:
+        name: lint-report
+        path: app/build/reports/lint-results-debug.html
+
+    - name: Run Detekt
+      run: ./gradlew detekt
+
+    - name: Upload Detekt Report
+      uses: actions/upload-artifact@v4
+      with:
+        name: detekt-report
+        path: build/reports/detekt/detekt.html
+
     - name: Generate Kover XML Report
       run: ./gradlew koverXmlReport
 

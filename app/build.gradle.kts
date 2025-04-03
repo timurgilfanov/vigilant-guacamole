@@ -1,4 +1,5 @@
 plugins {
+    alias(libs.plugins.detekt)
     alias(libs.plugins.kover)
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
