@@ -1,6 +1,5 @@
-package timur.gilfanov.vigilant_guacamole.ui.theme
+package timur.gilfanov.guacamole.ui.theme
 
-import android.app.Activity
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme

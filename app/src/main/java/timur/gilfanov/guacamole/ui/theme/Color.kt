@@ -1,4 +1,4 @@
-package timur.gilfanov.vigilant_guacamole.ui.theme
+package timur.gilfanov.guacamole.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
