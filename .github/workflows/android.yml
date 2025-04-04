@@ -55,12 +55,20 @@ jobs:
           --test app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk \
           --device model=redfin,version=30 \
           --timeout 5m
+          --results-dir="instrumentation-test-results" \
+          --results-bucket=gs://instrumentation-test-results \
+          --format=json > test_results.json
+
+    - name: Download results from Firebase Test Lab
+      run: |
+        mkdir -p testlab-results
+        gsutil -m cp -r gs://instrumentation-test-results/instrumentation-test-results testlab-results/
 
     - name: Upload Instrumented Test Report
       uses: actions/upload-artifact@v4
       with:
-        name: instrumented-test-report
-        path: app/build/reports/androidTests/connected
+        name: firebase-testlab-results
+        path: testlab-results
 
     - name: Run Android Lint
       run: ./gradlew lintDebug
