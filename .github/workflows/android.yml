@@ -56,8 +56,7 @@ jobs:
           --device model=redfin,version=30 \
           --timeout 5m \
           --results-dir="instrumentation-test-results" \
-          --results-bucket=gs://instrumentation-test-results \
-          --format=json > test_results.json
+          --results-bucket=gs://instrumentation-test-results          
 
     - name: Download results from Firebase Test Lab
       run: |
