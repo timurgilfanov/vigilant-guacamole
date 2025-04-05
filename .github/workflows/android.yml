@@ -202,7 +202,7 @@ jobs:
         files: app/build/reports/kover/report.xml
         fail_ci_if_error: true
 
-  delivery:
+  deliveryQA:
     needs: test
 
     permissions:
@@ -231,6 +231,17 @@ jobs:
     - name: Install Ruby + Fastlane
       run: |
         sudo gem install fastlane
+
+  deliveryPlay:
+    needs: test
+
+    permissions:
+      pull-requests: write
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
 
     - name: Decode Play Store service account key
       run: |
