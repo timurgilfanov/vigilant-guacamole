@@ -86,15 +86,10 @@ jobs:
         report_paths: app/build/test-results/testDebugUnitTest/*.xml
         check_name: "Unit Test Results"
 
-    - name: Search instrumented tests results
-      run: |
-        ls testlab-results \
-        ls testlab-results\redfin-30-en-portrait \
-
     - name: Publish Instrumented Test Results
       uses: mikepenz/action-junit-report@v4
       with:
-        report_paths: testlab-results/*/test_result_*.xml
+        report_paths: testlab-results/instrumentation-test-results/**/*.xml
         check_name: "Instrumented Test Results"
 
     - name: Run Android Lint
