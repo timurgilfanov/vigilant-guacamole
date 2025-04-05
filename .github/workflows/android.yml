@@ -25,6 +25,10 @@ jobs:
         head: ${{ github.event.pull_request.head.sha || github.sha }}
         extra_args: --results=verified,unknown
 
+    - name: Decode google-services.json
+      run: |
+        echo "${{ secrets.GOOGLE_SERVICES_JSON_B64 }}" | base64 -d > app/google-services.json
+
     - name: set up JDK 17
       uses: actions/setup-java@v4
       with:
@@ -43,10 +47,6 @@ jobs:
 
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
-
-    - name: Decode google-services.json
-      run: |
-        echo "${{ secrets.GOOGLE_SERVICES_JSON_B64 }}" | base64 -d > app/google-services.json
 
     - name: Build Debug APK
       run: ./gradlew assembleDebug
@@ -77,6 +77,10 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
+
+    - name: Decode google-services.json
+      run: |
+        echo "${{ secrets.GOOGLE_SERVICES_JSON_B64 }}" | base64 -d > app/google-services.json
 
     - name: Cache Gradle dependencies
       uses: actions/cache@v4
