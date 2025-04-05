@@ -80,13 +80,17 @@ jobs:
         name: firebase-testlab-results
         path: testlab-results
 
-    - name: Publish Test Results
+    - name: Publish Unit Test Results
       uses: mikepenz/action-junit-report@v4
       with:
-        report_paths: |
-          app/build/test-results/testDebugUnitTest/*.xml
-          app/build/outputs/androidTest-results/connected/*.xml
-        check_name: "All Test Results"
+        report_paths: app/build/test-results/testDebugUnitTest/*.xml
+        check_name: "Unit Test Results"
+
+    - name: Publish Instrumented Test Results
+      uses: mikepenz/action-junit-report@v4
+      with:
+        report_paths: testlab-results/*/test_result_*.xml
+        check_name: "Instrumented Test Results"
 
     - name: Run Android Lint
       run: ./gradlew lintDebug
