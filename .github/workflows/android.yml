@@ -211,6 +211,12 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    - name: Download Debug APK
+      uses: actions/download-artifact@v4
+      with:
+        name: debug-apk
+        path: app/build/outputs/apk/debug
+
     - name: Install Firebase CLI
       run: |
         curl -sL https://firebase.tools | bash
