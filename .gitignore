@@ -33,6 +33,8 @@ google-services.json
 *.hprof
 
 # Fastlane keys
-fastlane/
+fastlane/keys
+fastlane/README.md
+fastlane/report.xml
 Gemfile
 Gemfile.lock
