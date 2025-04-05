@@ -40,7 +40,7 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
 
 @Preview(showBackground = true)
 @Composable
-private fun GreetingPreview() {
+fun GreetingPreview() {
     VigilantguacamoleTheme {
         Greeting("Android")
     }
