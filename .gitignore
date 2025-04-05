@@ -33,7 +33,7 @@ google-services.json
 *.hprof
 
 # Fastlane keys
-fastlane/keys
+fastlane/keys/play-store-service-account.json
 fastlane/README.md
 fastlane/report.xml
 Gemfile
