@@ -35,9 +35,9 @@ jobs:
       run: ./gradlew assembleDebug
 
   test:
+    needs: build
 
     permissions:
-      contents: read
       checks: write # required for mikepenz/action-junit-report
       pull-requests: write
 
