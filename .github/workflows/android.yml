@@ -228,10 +228,6 @@ jobs:
           --token ${{ secrets.FIREBASE_TOKEN }} \
           --groups "qa-team"
 
-    - name: Install Ruby + Fastlane
-      run: |
-        sudo gem install fastlane
-
   deliveryPlay:
     needs: test
 
@@ -246,11 +242,10 @@ jobs:
     - name: Decode Play Store service account key
       run: |
         mkdir -p fastlane/keys
-        echo "${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT_JSON }}" > fastlane/keys/play-store-service-account.json
+        echo "${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT_JSON_B64 }}" | base64 -d > fastlane/keys/play-store-service-account.json
 
     - name: Decode google-services.json
-      run: |
-        echo "${{ secrets.GOOGLE_SERVICES_JSON_B64 }}" | base64 -d > app/google-services.json
+      run: echo "${{ secrets.GOOGLE_SERVICES_JSON_B64 }}" | base64 -d > app/google-services.json
 
     - name: Cache Gradle dependencies
       uses: actions/cache@v4
@@ -267,6 +262,10 @@ jobs:
 
     - name: Build AAB
       run: ./gradlew bundleRelease
+
+    - name: Install Ruby + Fastlane
+      run: |
+        sudo gem install fastlane
 
     - name: Upload to Google Play with Fastlane
       run: fastlane internal
