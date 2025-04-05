@@ -46,6 +46,56 @@ jobs:
     - name: Build Debug APK
       run: ./gradlew assembleDebug
 
+    - name: Build AndroidTest APK
+      run: ./gradlew assembleDebugAndroidTest
+
+    - name: Upload Debug APK
+      uses: actions/upload-artifact@v4
+      with:
+        name: debug-apk
+        path: app/build/outputs/apk/debug/app-debug.apk
+
+    - name: Upload AndroidTest APK
+      uses: actions/upload-artifact@v4
+      with:
+        name: androidtest-apk
+        path: app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk
+
+  test:
+    needs: build
+
+    permissions:
+      checks: write # required for mikepenz/action-junit-report
+      pull-requests: write
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Cache Gradle dependencies
+      uses: actions/cache@v4
+      with:
+        path: |
+          ~/.gradle/caches
+          ~/.gradle/wrapper
+        key: gradle-${{ runner.os }}-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+        restore-keys: |
+          gradle-${{ runner.os }}-
+
+    - name: Grant execute permission for gradlew
+      run: chmod +x gradlew
+
+    - name: Download Debug APK
+      uses: actions/download-artifact@v4
+      with:
+        name: debug-apk
+        path: app/build/outputs/apk/debug
+
+    - name: Download AndroidTest APK
+      uses: actions/download-artifact@v4
+      with:
+        name: androidtest-apk
+        path: app/build/outputs/apk/androidTest/debug
+
     - name: Run Unit Tests
       run: |
         ./gradlew testDebugUnitTest | tee unit-test.log
@@ -58,9 +108,6 @@ jobs:
       with:
         name: unit-test-report
         path: app/build/reports/tests/testDebugUnitTest
-
-    - name: Build AndroidTest APK
-      run: ./gradlew assembleDebugAndroidTest
 
     - name: Authenticate to Google Cloud
       uses: google-github-actions/auth@v2
@@ -156,6 +203,6 @@ jobs:
     - name: Distribute to Firebase Testers
       run: |
         firebase appdistribution:distribute app/build/outputs/apk/debug/app-debug.apk \
-          --app ${{ secrets.GCP_PROJECT_ID }} \
+          --app ${{ secrets.FIREBASE_APP_ID }} \
           --token ${{ secrets.FIREBASE_TOKEN }} \
           --groups "qa-team"
