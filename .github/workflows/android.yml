@@ -211,6 +211,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    - name: Install Firebase CLI
+      run: |
+        curl -sL https://firebase.tools | bash
+
     - name: Distribute to Firebase Testers
       run: |
         firebase appdistribution:distribute app/build/outputs/apk/debug/app-debug.apk \
