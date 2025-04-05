@@ -86,6 +86,11 @@ jobs:
         report_paths: app/build/test-results/testDebugUnitTest/*.xml
         check_name: "Unit Test Results"
 
+    - name: Search instrumented tests results
+      run: |
+        ls testlab-results \
+        ls testlab-results\redfin-30-en-portrait \
+
     - name: Publish Instrumented Test Results
       uses: mikepenz/action-junit-report@v4
       with:
