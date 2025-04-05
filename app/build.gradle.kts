@@ -5,14 +5,15 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.google.services)
 }
 
 android {
-    namespace = "timur.gilfanov.vigilant_guacamole"
+    namespace = "timur.gilfanov.guacamole"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "timur.gilfanov.vigilant_guacamole"
+        applicationId = "timur.gilfanov.guacamole"
         minSdk = 24
         targetSdk = 35
         versionCode = 1
@@ -65,6 +66,7 @@ dependencies {
     detektPlugins(libs.detekt.compose)
     detektPlugins(libs.detekt.formatting)
     testImplementation(libs.junit)
+    implementation(platform(libs.firebase.bom))
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))
