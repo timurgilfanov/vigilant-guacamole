@@ -232,8 +232,9 @@ jobs:
       run: |
         sudo gem install fastlane
 
-    - name: Write Play Store key
+    - name: Decode Play Store service account key
       run: |
+        mkdir -p android/fastlane/keys
         echo "${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT_JSON }}" > android/fastlane/keys/play-store-service-account.json
 
     - name: Build AAB
