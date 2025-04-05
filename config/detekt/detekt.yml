@@ -12,3 +12,5 @@ style:
   MagicNumber:
     ignorePropertyDeclaration: true
     ignoreCompanionObjectPropertyDeclaration: true
+  UnusedPrivateMember:
+    allowedNames: '.*Preview$'

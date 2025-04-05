@@ -42,6 +42,10 @@ android {
     }
 }
 
+ktlint {
+    version.set("1.4.1") // restricted by compose ruleset for ktlint, waiting for 0.4.23 release
+}
+
 detekt {
     config.setFrom(files("$rootDir/config/detekt/detekt.yml"))
     buildUponDefaultConfig = true
@@ -57,6 +61,8 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+    ktlintRuleset(libs.ktlint.compose)
+    detektPlugins(libs.detekt.compose)
     detektPlugins(libs.detekt.formatting)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
