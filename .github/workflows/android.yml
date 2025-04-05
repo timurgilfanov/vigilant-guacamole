@@ -11,6 +11,7 @@ jobs:
 
     permissions:
       contents: read
+      checks: write # required for mikepenz/action-junit-report
       pull-requests: write
 
     runs-on: ubuntu-latest
