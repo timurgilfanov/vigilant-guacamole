@@ -31,6 +31,16 @@ jobs:
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
 
+    - name: Cache Gradle dependencies
+      uses: actions/cache@v4
+      with:
+        path: |
+          ~/.gradle/caches
+          ~/.gradle/wrapper
+        key: gradle-${{ runner.os }}-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+        restore-keys: |
+          gradle-${{ runner.os }}-
+
     - name: Build Debug APK
       run: ./gradlew assembleDebug
 
@@ -46,7 +56,11 @@ jobs:
     steps:
 
     - name: Run Unit Tests
-      run: ./gradlew testDebugUnitTest
+      run: |
+        ./gradlew testDebugUnitTest | tee unit-test.log
+        EXIT=${PIPESTATUS[0]}
+        [ $EXIT -eq 0 ] || cat unit-test.log
+        exit $EXIT
 
     - name: Upload Unit Test Report
       uses: actions/upload-artifact@v4
@@ -111,7 +125,17 @@ jobs:
         path: app/build/reports/lint-results-debug.html
 
     - name: Run Detekt
-      run: ./gradlew detekt
+      run: |
+        ./gradlew detekt | tee detekt.log
+        EXIT=${PIPESTATUS[0]}
+        [ $EXIT -eq 0 ] || cat detekt.log
+        exit $EXIT
+
+    - name: Upload Detekt Log
+      uses: actions/upload-artifact@v4
+      with:
+        name: detekt-log
+        path: detekt.log
 
     - name: Upload Detekt Report
       uses: actions/upload-artifact@v4
