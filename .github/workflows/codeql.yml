@@ -109,6 +109,16 @@ jobs:
           echo '  make release'
           exit 1
 
+      - name: Cache Gradle dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: gradle-${{ runner.os }}-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            gradle-${{ runner.os }}-
+
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v3
         with:
