@@ -41,7 +41,8 @@ platform :android do
       upload_to_play_store(
         track: 'internal',
         json_key: 'fastlane/keys/play-store-service-account.json',
-        aab: 'app/build/outputs/bundle/release/app-release.aab'
+        aab: 'app/build/outputs/bundle/release/app-release.aab',
+        release_status: 'draft'
       )
     end
 end
