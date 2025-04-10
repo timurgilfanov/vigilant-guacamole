@@ -58,6 +58,34 @@ jobs:
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
 
+    - name: Run Android Lint
+      run: ./gradlew lintDebug
+
+    - name: Upload Lint Report
+      uses: actions/upload-artifact@v4
+      with:
+        name: lint-report
+        path: app/build/reports/lint-results-debug.html
+
+    - name: Run Detekt
+      run: |
+        ./gradlew detekt | tee detekt.log
+        EXIT=${PIPESTATUS[0]}
+        [ $EXIT -eq 0 ] || cat detekt.log
+        exit $EXIT
+
+    - name: Upload Detekt Log
+      uses: actions/upload-artifact@v4
+      with:
+        name: detekt-log
+        path: detekt.log
+
+    - name: Upload Detekt Report
+      uses: actions/upload-artifact@v4
+      with:
+        name: detekt-report
+        path: app/build/reports/detekt/detekt.html
+
     - name: Build Debug APK
       run: ./gradlew assembleDebug
 
@@ -183,34 +211,6 @@ jobs:
       with:
         report_paths: testlab-results/instrumentation-test-results/**/*.xml
         check_name: "Instrumented Test Results"
-
-    - name: Run Android Lint
-      run: ./gradlew lintDebug
-
-    - name: Upload Lint Report
-      uses: actions/upload-artifact@v4
-      with:
-        name: lint-report
-        path: app/build/reports/lint-results-debug.html
-
-    - name: Run Detekt
-      run: |
-        ./gradlew detekt | tee detekt.log
-        EXIT=${PIPESTATUS[0]}
-        [ $EXIT -eq 0 ] || cat detekt.log
-        exit $EXIT
-
-    - name: Upload Detekt Log
-      uses: actions/upload-artifact@v4
-      with:
-        name: detekt-log
-        path: detekt.log
-
-    - name: Upload Detekt Report
-      uses: actions/upload-artifact@v4
-      with:
-        name: detekt-report
-        path: app/build/reports/detekt/detekt.html
 
     - name: Generate Kover XML Report
       run: ./gradlew koverXmlReport
