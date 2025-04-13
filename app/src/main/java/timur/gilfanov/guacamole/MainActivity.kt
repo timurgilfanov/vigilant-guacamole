@@ -13,7 +13,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -37,8 +37,8 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun TwoButtons(padding: PaddingValues, modifier: Modifier = Modifier) {
-    val counter = remember { mutableStateOf(0) }
-    
+    var counter by remember { mutableIntStateOf(0) }
+
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -46,15 +46,15 @@ fun TwoButtons(padding: PaddingValues, modifier: Modifier = Modifier) {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            text = counter.value.toString(),
+            text = counter.toString(),
             modifier = Modifier.padding(vertical = 16.dp)
         )
-        
-        Button(onClick = { counter.value++ }) {
+
+        Button(onClick = { counter++ }) {
             Text("Increase")
         }
         Spacer(modifier = Modifier.padding(vertical = 8.dp))
-        Button(onClick = { counter.value-- }) {
+        Button(onClick = { counter-- }) {
             Text("Decrease")
         }
     }
