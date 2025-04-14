@@ -229,7 +229,6 @@ jobs:
         token: ${{ secrets.CODECOV_TOKEN }}
         files: testlab-results/instrumentation-test-results/**/*.xml
         flags: android_instrumented
-        name: codecov-android-instrumented
         fail_ci_if_error: true
 
   deliveryQA:
