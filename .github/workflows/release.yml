@@ -87,10 +87,10 @@ jobs:
         path: app/build/reports/detekt/detekt.html
 
     - name: Build Debug APK
-      run: ./gradlew assembleDebug
+      run: ./gradlew -Pcoverage assembleDebug
 
     - name: Build AndroidTest APK
-      run: ./gradlew assembleDebugAndroidTest
+      run: ./gradlew -Pcoverage assembleDebugAndroidTest
 
     - name: Upload Debug APK
       uses: actions/upload-artifact@v4

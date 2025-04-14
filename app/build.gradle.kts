@@ -38,7 +38,7 @@ android {
 
     buildTypes {
         debug {
-            enableAndroidTestCoverage = true
+            enableAndroidTestCoverage = project.hasProperty("coverage")
         }
         release {
             isMinifyEnabled = false
