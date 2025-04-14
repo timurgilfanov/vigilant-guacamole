@@ -196,6 +196,11 @@ jobs:
         mkdir -p testlab-results
         gsutil -m cp -r gs://instrumentation-test-results/instrumentation-test-results-${{ github.run_id }}-${{ github.run_attempt }} testlab-results/
 
+    - name: List Firebase Results Files
+      run: |
+        ls testlab-results
+        find testlab-results -type f
+
     - name: Download JaCoCo CLI
       run: |
         curl -L -o jacococli.jar https://repo1.maven.org/maven2/org/jacoco/org.jacoco.cli/0.8.11/org.jacoco.cli-0.8.11-nodeps.jar
