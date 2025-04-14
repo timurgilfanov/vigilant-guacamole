@@ -186,13 +186,13 @@ jobs:
           --test app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk \
           --device model=redfin,version=30 \
           --timeout 5m \
-          --results-dir="instrumentation-test-results" \
-          --results-bucket=gs://instrumentation-test-results          
+          --results-dir="instrumentation-test-results-${{ github.run_id }}-${{ github.run_attempt }}" \
+          --results-bucket=gs://instrumentation-test-results     
 
     - name: Download results from Firebase Test Lab
       run: |
         mkdir -p testlab-results
-        gsutil -m cp -r gs://instrumentation-test-results/instrumentation-test-results testlab-results/
+        gsutil -m cp -r gs://instrumentation-test-results/instrumentation-test-results-${{ github.run_id }}-${{ github.run_attempt }} testlab-results/
 
     - name: Upload Instrumented Test Report
       uses: actions/upload-artifact@v4
@@ -209,7 +209,7 @@ jobs:
     - name: Publish Instrumented Test Results
       uses: mikepenz/action-junit-report@v4
       with:
-        report_paths: testlab-results/instrumentation-test-results/**/*.xml
+        report_paths: testlab-results/instrumentation-test-results-${{ github.run_id }}-${{ github.run_attempt }}/**/*.xml
         check_name: "Instrumented Test Results"
 
     - name: Generate Kover XML Report
@@ -227,7 +227,7 @@ jobs:
       uses: codecov/codecov-action@v4
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
-        files: testlab-results/instrumentation-test-results/**/*.xml
+        files: testlab-results/instrumentation-test-results-${{ github.run_id }}-${{ github.run_attempt }}/**/*.xml
         flags: android_instrumented
         fail_ci_if_error: true
 
