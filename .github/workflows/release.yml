@@ -216,7 +216,6 @@ jobs:
       run: |
         mkdir -p coverage-report
         java -jar jacococli.jar report merged-coverage/coverage.ec \
-          --classfiles app/build/intermediates/javac/debug/classes \
           --classfiles app/build/tmp/kotlin-classes/debug \
           --sourcefiles app/src/main \
           --xml coverage-report/instrumented-report.xml
