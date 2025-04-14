@@ -203,9 +203,10 @@ jobs:
     - name: Convert .ec to JaCoCo XML
       run: |
         mkdir -p coverage-report
-        java -jar jacococli.jar report testlab-results/instrumentation-test-results-${{ github.run_id }}-${{ github.run_attempt }}/coverage.ec \
+        java -jar jacococli.jar report testlab-results/instrumentation-test-results-${{ github.run_id }}-${{ github.run_attempt }}/artifacts/sdcard/Download/coverage.ec \
           --classfiles app/build/intermediates/javac/debug/classes \
-          --sourcefiles app/src/main/java \
+          --classfiles app/build/tmp/kotlin-classes/debug \
+          --sourcefiles app/src/main \
           --xml coverage-report/instrumented-report.xml
 
     - name: Upload Instrumented Test Report
@@ -228,6 +229,18 @@ jobs:
 
     - name: Generate Kover XML Report
       run: ./gradlew koverXmlReport
+
+    - name: Upload Kover Unit XML Report
+      uses: actions/upload-artifact@v4
+      with:
+        name: unit-report
+        path: app/build/reports/kover/report.xml
+
+    - name: Upload JaCoCo Instrumented XML Report
+      uses: actions/upload-artifact@v4
+      with:
+        name: instrumented-report
+        path: coverage-report/instrumented-report.xml
 
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v4
