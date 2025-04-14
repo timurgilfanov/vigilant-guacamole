@@ -19,4 +19,9 @@ class ExampleInstrumentedTest {
         val appContext = InstrumentationRegistry.getInstrumentation().targetContext
         assertEquals("timur.gilfanov.guacamole", appContext.packageName)
     }
+
+    @Test
+    fun multiplication_isCorrect() {
+        assertEquals(4, times(2, 2))
+    }
 }
