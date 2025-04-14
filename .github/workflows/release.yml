@@ -187,9 +187,9 @@ jobs:
           --device model=MediumPhone.arm,version=30 \
           --timeout 5m \
           --environment-variables coverage=true,coverageFile=/sdcard/Download/coverage.ec \
-          --directories-to-pull /sdcard/Download
+          --directories-to-pull /sdcard/Download \
           --results-dir="instrumentation-test-results-${{ github.run_id }}-${{ github.run_attempt }}" \
-          --results-bucket=gs://instrumentation-test-results     
+          --results-bucket=gs://instrumentation-test-results
 
     - name: Download results from Firebase Test Lab
       run: |
