@@ -226,7 +226,7 @@ jobs:
       uses: codecov/codecov-action@v4
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
-        files: testlab-results/instrumentation-test-results/**/*.ec
+        files: testlab-results/instrumentation-test-results/**/*.xml
         flags: android_instrumented
         name: codecov-android-instrumented
         fail_ci_if_error: false
