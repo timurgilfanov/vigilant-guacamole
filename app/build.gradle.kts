@@ -37,6 +37,9 @@ android {
     }
 
     buildTypes {
+        debug {
+            enableAndroidTestCoverage = true
+        }
         release {
             isMinifyEnabled = false
             signingConfig = signingConfigs.getByName("release")
