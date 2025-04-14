@@ -186,6 +186,8 @@ jobs:
           --test app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk \
           --device model=MediumPhone.arm,version=30 \
           --timeout 5m \
+          --environment-variables coverageFile=/sdcard/Download/coverage.ec \
+          --directories-to-pull /sdcard/Download
           --results-dir="instrumentation-test-results-${{ github.run_id }}-${{ github.run_attempt }}" \
           --results-bucket=gs://instrumentation-test-results     
 
@@ -193,6 +195,18 @@ jobs:
       run: |
         mkdir -p testlab-results
         gsutil -m cp -r gs://instrumentation-test-results/instrumentation-test-results-${{ github.run_id }}-${{ github.run_attempt }} testlab-results/
+
+    - name: Download JaCoCo CLI
+      run: |
+        curl -L -o jacococli.jar https://repo1.maven.org/maven2/org/jacoco/org.jacoco.cli/0.8.11/org.jacoco.cli-0.8.11-nodeps.jar
+
+    - name: Convert .ec to JaCoCo XML
+      run: |
+        mkdir -p coverage-report
+        java -jar jacococli.jar report testlab-results/instrumentation-test-results-${{ github.run_id }}-${{ github.run_attempt }}/coverage.ec \
+          --classfiles app/build/intermediates/javac/debug/classes \
+          --sourcefiles app/src/main/java \
+          --xml coverage-report/instrumented-report.xml
 
     - name: Upload Instrumented Test Report
       uses: actions/upload-artifact@v4
@@ -227,7 +241,7 @@ jobs:
       uses: codecov/codecov-action@v4
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
-        files: testlab-results/instrumentation-test-results-${{ github.run_id }}-${{ github.run_attempt }}/**/*.xml
+        files: coverage-report/instrumented-report.xml
         flags: android_instrumented
         fail_ci_if_error: true
 
