@@ -116,6 +116,9 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
+    - name: Define results directory variable
+      run: echo "RESULTS_DIR=instrumentation-test-results-${{ github.run_id }}-${{ github.run_attempt }}" >> $GITHUB_ENV
+
     - name: Decode google-services.json
       run: |
         echo "${{ secrets.GOOGLE_SERVICES_JSON_B64 }}" | base64 -d > app/google-services.json
@@ -188,27 +191,31 @@ jobs:
           --timeout 5m \
           --environment-variables coverage=true,coverageFile=/sdcard/Download/coverage.ec \
           --directories-to-pull /sdcard/Download \
-          --results-dir="instrumentation-test-results-${{ github.run_id }}-${{ github.run_attempt }}" \
+          --results-dir="${{ env.RESULTS_DIR }}" \
           --results-bucket=gs://instrumentation-test-results
 
     - name: Download results from Firebase Test Lab
       run: |
         mkdir -p testlab-results
-        gsutil -m cp -r gs://instrumentation-test-results/instrumentation-test-results-${{ github.run_id }}-${{ github.run_attempt }} testlab-results/
-
-    - name: List Firebase Results Files
-      run: |
-        ls testlab-results
-        find testlab-results -type f
+        gsutil -m cp -r gs://instrumentation-test-results/${{ env.RESULTS_DIR }} testlab-results/
 
     - name: Download JaCoCo CLI
       run: |
         curl -L -o jacococli.jar https://repo1.maven.org/maven2/org/jacoco/org.jacoco.cli/0.8.11/org.jacoco.cli-0.8.11-nodeps.jar
 
-    - name: Convert .ec to JaCoCo XML
+    - name: Merge .ec files
+      run: |
+        mkdir -p merged-coverage
+        EC_FILES=$(find testlab-results/${{ env.RESULTS_DIR }} -path "*/artifacts/sdcard/Download/coverage.ec")
+        if [ -z "$EC_FILES" ]; then
+          echo "❌ No coverage.ec files found."; exit 1
+        fi
+        java -jar jacococli.jar merge $EC_FILES --destfile merged-coverage/coverage.ec
+
+    - name: Generate JaCoCo XML Report from merged .ec
       run: |
         mkdir -p coverage-report
-        java -jar jacococli.jar report testlab-results/instrumentation-test-results-${{ github.run_id }}-${{ github.run_attempt }}/artifacts/sdcard/Download/coverage.ec \
+        java -jar jacococli.jar report merged-coverage/coverage.ec \
           --classfiles app/build/intermediates/javac/debug/classes \
           --classfiles app/build/tmp/kotlin-classes/debug \
           --sourcefiles app/src/main \
@@ -229,7 +236,7 @@ jobs:
     - name: Publish Instrumented Test Results
       uses: mikepenz/action-junit-report@v4
       with:
-        report_paths: testlab-results/instrumentation-test-results-${{ github.run_id }}-${{ github.run_attempt }}/**/*.xml
+        report_paths: testlab-results/${{ env.RESULTS_DIR }}/**/*.xml
         check_name: "Instrumented Test Results"
 
     - name: Generate Kover XML Report
