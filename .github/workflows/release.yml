@@ -220,6 +220,7 @@ jobs:
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
         files: app/build/reports/kover/report.xml
+        flags: android_unit
         fail_ci_if_error: true
 
     - name: Upload Instrumented Coverage to Codecov
@@ -229,7 +230,7 @@ jobs:
         files: testlab-results/instrumentation-test-results/**/*.xml
         flags: android_instrumented
         name: codecov-android-instrumented
-        fail_ci_if_error: false
+        fail_ci_if_error: true
 
   deliveryQA:
     needs: test
