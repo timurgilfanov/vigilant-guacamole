@@ -45,11 +45,11 @@ fun TwoButtons(padding: PaddingValues, modifier: Modifier = Modifier) {
         modifier = modifier
             .fillMaxSize()
             .padding(padding),
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Text(
             text = counter.toString(),
-            modifier = Modifier.padding(vertical = 16.dp)
+            modifier = Modifier.padding(vertical = 16.dp),
         )
 
         Button(onClick = { counter++ }) {
