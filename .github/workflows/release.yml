@@ -15,8 +15,42 @@ on:
       - 'gradle/**'
 
 jobs:
-  build:
 
+  bump_version:
+    name: Bump version
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Git config
+        run: |
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+
+      - name: Bump versionCode and versionName
+        run: |
+          file="app/build.gradle.kts"
+          version_code=$(grep -oP 'versionCode = \K[0-9]+' "$file")
+          version_name=$(grep -oP 'versionName = "\K[0-9.]+' "$file")
+
+          new_version_code=$((version_code + 1))
+          new_version_name="0.$new_version_code"
+
+          echo "Bumping to versionCode=$new_version_code, versionName=$new_version_name"
+          sed -i "s/versionCode = $version_code/versionCode = $new_version_code/" "$file"
+          sed -i "s/versionName = \"$version_name\"/versionName = \"$new_version_name\"/" "$file"
+
+      - name: Commit and push bumped version
+        run: |
+          git add app/build.gradle.kts
+          git commit -m "ci: bump version"
+          git push
+
+  build:
+    needs: bump_version
     permissions:
       contents: read
 
@@ -290,7 +324,7 @@ jobs:
         firebase appdistribution:distribute app/build/outputs/apk/debug/app-debug.apk \
           --app ${{ secrets.FIREBASE_APP_ID }} \
           --token ${{ secrets.FIREBASE_TOKEN }} \
-          --groups "qa-team"
+          --groups "qa-team"      
 
   deliveryPlay:
     needs: test
