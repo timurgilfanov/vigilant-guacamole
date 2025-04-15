@@ -2,9 +2,17 @@ name: Release
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "main", "develop" ]
+    paths:
+      - 'app/**'
+      - 'build.gradle.kts'
+      - 'gradle/**'
   pull_request:
-    branches: [ "main" ]
+    branches: [ "main", "develop" ]
+    paths:
+      - 'app/**'
+      - 'build.gradle.kts'
+      - 'gradle/**'
 
 jobs:
   build:
@@ -286,7 +294,7 @@ jobs:
 
   deliveryPlay:
     needs: test
-
+    if: github.ref == 'refs/heads/main'
     permissions:
       pull-requests: write
 
