@@ -9,13 +9,21 @@
 # the `language` matrix defined below to confirm you have the correct set of
 # supported CodeQL languages.
 #
-name: "CodeQL Advanced"
+name: "CodeQL"
 
 on:
   push:
     branches: [ "main", "develop" ]
+    paths:
+      - 'app/**'
+      - 'build.gradle.kts'
+      - 'gradle/**'
   pull_request:
     branches: [ "main", "develop" ]
+    paths:
+      - 'app/**'
+      - 'build.gradle.kts'
+      - 'gradle/**'
   schedule:
     - cron: '35 10 * * 6'
 
